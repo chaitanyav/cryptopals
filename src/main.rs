@@ -18,6 +18,7 @@ fn main() {
         crate::base64::base64_to_ascii(String::from("bGlnaHQgdw=="))
     );
 
+    // Set-1 Challenge-1
     println!(
         "{}",
         crate::base64::base64_to_ascii(String::from(
@@ -30,6 +31,26 @@ fn main() {
         crate::base64::base64_to_ascii(String::from("bGlnaHQgd29yay4="))
     );
 
-    let xor_string = crate::xor::xor_strings(String::from("1c0111001f010100061a024b53535009181c"), String::from("686974207468652062756c6c277320657965"));
+    // Set-1 Challenge-2
+    let xor_string = crate::xor::xor_strings(
+        String::from("1c0111001f010100061a024b53535009181c"),
+        String::from("686974207468652062756c6c277320657965"),
+    );
     assert!(xor_string.eq(&String::from("746865206b696420646f6e277420706c6179")));
+
+    // Set-1 Challenge 3
+    let encoded_string = crate::xor::hex_to_char(String::from(
+        "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736",
+    ));
+
+    let mut orig_string = String::new();
+    let key = 'X';
+    let enc_u8 = encoded_string.chars().nth(0).unwrap() as u8;
+    let key_u8 = key as u8;
+    let orig_ch = (enc_u8 ^ key_u8) as char;
+    for ch in encoded_string.chars() {
+        let orig_ch = ((key as u8) ^ (ch as u8)) as char;
+        orig_string.push(orig_ch);
+    }
+    println!("{}", orig_string);
 }
