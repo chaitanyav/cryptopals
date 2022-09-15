@@ -117,29 +117,7 @@ pub fn hex_to_base64(input: &str) -> String {
     binary_string_to_base64(bin_string)
 }
 
-fn base64_to_ascii_without_padding(input: String) -> String {
-    let mut bin_string = String::new();
-
-    let mapping = base64_char_to_u8();
-    for ch in input.chars() {
-        bin_string.push_str(&format!("{:06b}", *mapping.get(&ch).unwrap()));
-    }
-
-    let mut idx = 0;
-    let mut ascii_string = String::new();
-    while idx < bin_string.len() {
-        let temp_str = &bin_string[idx..(idx + 8)];
-        ascii_string.push_str(&format!(
-            "{}",
-            binary_string_to_u8(temp_str.to_string()) as char
-        ));
-        idx += 8;
-    }
-
-    ascii_string
-}
-
-fn base64_to_ascii_with_padding(input: String) -> String {
+pub fn base64_to_ascii(input: String) -> String {
     let mut bin_string = String::new();
 
     let mapping = base64_char_to_u8();
@@ -165,12 +143,4 @@ fn base64_to_ascii_with_padding(input: String) -> String {
     }
 
     ascii_string
-}
-
-pub fn base64_to_ascii(input: String) -> String {
-    if input.ends_with("=") {
-        base64_to_ascii_with_padding(input)
-    } else {
-        base64_to_ascii_without_padding(input)
-    }
 }
