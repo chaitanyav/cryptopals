@@ -1,4 +1,5 @@
 pub mod base64;
+pub mod xor;
 
 fn main() {
     let ascii_base64 =
@@ -28,4 +29,7 @@ fn main() {
         "{}",
         crate::base64::base64_to_ascii(String::from("bGlnaHQgd29yay4="))
     );
+
+    let xor_string = crate::xor::xor_strings(String::from("1c0111001f010100061a024b53535009181c"), String::from("686974207468652062756c6c277320657965"));
+    assert!(xor_string.eq(&String::from("746865206b696420646f6e277420706c6179")));
 }
