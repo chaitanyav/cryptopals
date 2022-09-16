@@ -42,7 +42,7 @@ pub fn hex_to_bytes(input: &String) -> Vec<u8> {
     res
 }
 
-pub fn decode_single_character_xor(mut encoded_string: &String, key: char) -> String {
+pub fn decode_single_character_xor(encoded_string: &String, key: char) -> String {
     let mut orig_string = String::new();
 
     let bytes: Vec<u8> = hex_to_bytes(encoded_string);

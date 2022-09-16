@@ -62,14 +62,25 @@ fn main() {
         crate::xor::decode_single_character_xor(&encoded_string, 'X')
     );
 
+    // Set-1 Challenge 4
+    let mut max_score = 0;
+    let mut orig_msg = String::from("");
     match read_lines("data/4.txt") {
         Ok(lines) => {
             for (line_num, line) in lines.enumerate() {
                 if let Ok(encoded_string) = line {
-                    for ch in 'A'..='Z' {
+                    for byte in 1 as u8..=255 {
                         let decoded_string =
-                            crate::xor::decode_single_character_xor(&encoded_string, ch);
-                        println!("{line_num} ch is {} {}", ch, decoded_string);
+                            crate::xor::decode_single_character_xor(&encoded_string, byte as char);
+                        let score = decoded_string
+                            .chars()
+                            .filter(|ch| ch.is_ascii_whitespace() || ch.is_alphabetic())
+                            .count();
+                        if score > max_score {
+                            //println!( "{line_num} character is {} {}",byte as char, decoded_string);
+                            max_score = score;
+                            orig_msg = decoded_string;
+                        }
                     }
                 }
             }
@@ -78,4 +89,6 @@ fn main() {
             println!("Error reading the file {:?}", e);
         }
     }
+
+    println!("{} {}", orig_msg, max_score);
 }
