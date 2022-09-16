@@ -1,6 +1,21 @@
 pub mod base64;
 pub mod xor;
 
+use std::fs::File;
+use std::io::{self, BufRead};
+use std::path::Path;
+
+// https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
+// The output is wrapped in a Result to allow matching on errors
+// Returns an Iterator to the Reader of the lines of the file.
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
+
 fn main() {
     let ascii_base64 =
         crate::base64::ascii_to_base64("The quick brown fox jumps over the lazy dog.");
@@ -39,18 +54,28 @@ fn main() {
     assert!(xor_string.eq(&String::from("746865206b696420646f6e277420706c6179")));
 
     // Set-1 Challenge 3
-    let encoded_string = crate::xor::hex_to_char(String::from(
-        "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736",
-    ));
+    let encoded_string =
+        String::from("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
 
-    let mut orig_string = String::new();
-    let key = 'X';
-    let enc_u8 = encoded_string.chars().nth(0).unwrap() as u8;
-    let key_u8 = key as u8;
-    let orig_ch = (enc_u8 ^ key_u8) as char;
-    for ch in encoded_string.chars() {
-        let orig_ch = ((key as u8) ^ (ch as u8)) as char;
-        orig_string.push(orig_ch);
+    println!(
+        "{}",
+        crate::xor::decode_single_character_xor(&encoded_string, 'X')
+    );
+
+    match read_lines("data/4.txt") {
+        Ok(lines) => {
+            for (line_num, line) in lines.enumerate() {
+                if let Ok(encoded_string) = line {
+                    for ch in 'A'..='Z' {
+                        let decoded_string =
+                            crate::xor::decode_single_character_xor(&encoded_string, ch);
+                        println!("{line_num} ch is {} {}", ch, decoded_string);
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            println!("Error reading the file {:?}", e);
+        }
     }
-    println!("{}", orig_string);
 }

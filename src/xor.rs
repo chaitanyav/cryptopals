@@ -23,8 +23,8 @@ fn binary_string_to_u8(input: String) -> u8 {
     result
 }
 
-pub fn hex_to_char(input: String) -> String {
-    let mut res = String::new();
+pub fn hex_to_bytes(input: &String) -> Vec<u8> {
+    let mut res: Vec<u8> = Vec::new();
 
     let mut binary_string = String::new();
     for ch in input.chars() {
@@ -35,12 +35,23 @@ pub fn hex_to_char(input: String) -> String {
     while idx < binary_string.len() {
         let temp_str = &binary_string[idx..(idx + 8)];
         let temp_u8 = binary_string_to_u8(temp_str.to_string());
-        let temp_ch = temp_u8 as char;
-        res.push(temp_ch);
+        res.push(temp_u8);
         idx += 8;
     }
 
     res
+}
+
+pub fn decode_single_character_xor(mut encoded_string: &String, key: char) -> String {
+    let mut orig_string = String::new();
+
+    let bytes: Vec<u8> = hex_to_bytes(encoded_string);
+    for b in bytes {
+        let orig_ch = ((key as u8) ^ b) as char;
+        orig_string.push(orig_ch);
+    }
+
+    orig_string
 }
 
 // input1, input2 are strings of equal length
