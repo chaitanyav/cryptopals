@@ -23,6 +23,27 @@ fn binary_string_to_u8(input: String) -> u8 {
     result
 }
 
+pub fn encode_repeated_xor(input: &String, key: &String) -> String {
+    let mut hex_string = String::new();
+
+    let mut idx = 0;
+
+    let input_bytes = input.as_bytes();
+    let key_bytes = key.as_bytes();
+    while idx < input_bytes.len() {
+        for idx1 in 0..key_bytes.len() {
+            let in_u8 = input_bytes[idx];
+            let key_u8 = key_bytes[idx1];
+            hex_string.push_str(&format!("{:x}", (in_u8 ^ key_u8)));
+            idx += 1;
+            if idx == input_bytes.len() {
+                break;
+            }
+        }
+    }
+    hex_string
+}
+
 pub fn hex_to_bytes(input: &String) -> Vec<u8> {
     let mut res: Vec<u8> = Vec::new();
 

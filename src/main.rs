@@ -67,7 +67,7 @@ fn main() {
     let mut orig_msg = String::from("");
     match read_lines("data/4.txt") {
         Ok(lines) => {
-            for (line_num, line) in lines.enumerate() {
+            for (_line_num, line) in lines.enumerate() {
                 if let Ok(encoded_string) = line {
                     for byte in 1 as u8..=255 {
                         let decoded_string =
@@ -90,5 +90,15 @@ fn main() {
         }
     }
 
-    println!("{} {}", orig_msg, max_score);
+    println!("{}", orig_msg);
+
+    // Set-1 Challenge 5
+    let enc_rep_xor_string = crate::xor::encode_repeated_xor(
+        &String::from(
+            "Burning 'em, if you ain't quick and nimble
+I go crazy when I hear a cymbal",
+        ),
+        &String::from("ICE"),
+    );
+    println!("encoded repeated xor string: {}", enc_rep_xor_string);
 }
